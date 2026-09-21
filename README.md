@@ -25,13 +25,14 @@
 通过当前会话配置的 OpenAI-compatible Images API 使用 Qwen-Image-2.1 生成或编辑图片，支持透明 PNG、多个有序参考图和项目内文件输出。它只用于当前 Agent 模型不是 GPT 系列的场景；GPT 系列会话应使用 Codex 内置 `imagegen`。
 
 - 来源 submodule：[skills/qwen-image-local](skills/qwen-image-local)
-- Skill 目录：`skills/qwen-image-local/skills/qwen-image-local`
+- 独立源仓库：[Kangede/qwen-image-local](https://github.com/Kangede/qwen-image-local)
+- Skill 目录：`skills/qwen-image-local`
 - 基本用法：在非 GPT Agent 会话中要求生成新图片，或提供最多五张本地参考图片进行编辑。
 
 推荐的 Agent 安装提示词：
 
 ```text
-请从 https://github.com/Kangede/agent-skills 递归初始化 Git submodule，并把其中 skills/qwen-image-local/skills/qwen-image-local 作为全局 Agent Skill 安装或更新到当前 Agent 的用户级 Skill 目录。请完整保留 SKILL.md、scripts、references、config、assets 和 agents 目录；如果已安装同名 Skill，请更新现有安装，不要创建重复目录。
+请把 qwen-image-local 作为全局 Agent Skill 安装或更新到当前 Agent 的用户级 Skill 目录。Skill 来源为 https://github.com/Kangede/qwen-image-local；聚合索引仓库为 https://github.com/Kangede/agent-skills，并通过 Git submodule 引用该源仓库。请完整保留 SKILL.md、scripts、references、config、assets 和 agents 目录；如果已安装同名 Skill，请更新现有安装，不要创建重复目录。
 
 该 Skill 只应在当前 Agent 模型不是 GPT 系列时启用；如果当前是 GPT 系列 Codex 会话，应继续使用内置 imagegen，不要让两个 Skill 竞争。安装后，从当前会话的模型提供方配置读取 OpenAI-compatible base_url，以及 env_key 所指向的 API Key；不要输出、复制到命令参数、写入仓库或让我在聊天中粘贴完整密钥。默认生图模型别名使用 Qwen-Image-2.1。运行 scripts/qwen_image.py check，通过 /v1/models 确认模型可用；不要替换成其它接口地址。如果当前 Agent 无法读取会话配置，请只告诉我需要设置 QWEN_IMAGE_BASE_URL 和 QWEN_IMAGE_API_KEY。
 ```
@@ -46,15 +47,15 @@ git clone --recurse-submodules https://github.com/Kangede/agent-skills.git
 # Codex / 通用 Agent Skills
 mkdir -p ~/.agents/skills
 cp -a agent-skills/skills/ask-vision ~/.agents/skills/
-cp -a agent-skills/skills/qwen-image-local/skills/qwen-image-local ~/.agents/skills/
+cp -a agent-skills/skills/qwen-image-local ~/.agents/skills/
 
 # Claude Code
 mkdir -p ~/.claude/skills
 cp -a agent-skills/skills/ask-vision ~/.claude/skills/
-cp -a agent-skills/skills/qwen-image-local/skills/qwen-image-local ~/.claude/skills/
+cp -a agent-skills/skills/qwen-image-local ~/.claude/skills/
 ```
 
-也可以让支持 Skill 安装器的 Agent 直接从各自的源 GitHub 路径全局安装。Qwen Skill 所在的引用仓库当前为私有仓库，因此初始化对应 submodule 时需要使用有权限的 GitHub 账号。安装后若未立即出现，请重启对应 Agent。
+也可以让支持 Skill 安装器的 Agent 直接从各自的源 GitHub 路径全局安装。安装后若未立即出现，请重启对应 Agent。
 
 ## 安全提示
 

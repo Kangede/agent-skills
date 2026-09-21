@@ -3,4 +3,4 @@
 	url = https://github.com/Kangede/ask-vision.git
 [submodule "skills/qwen-image-local"]
 	path = skills/qwen-image-local
-	url = https://github.com/Kangede/LocalLLMProxy.git
+	url = https://github.com/Kangede/qwen-image-local.git
