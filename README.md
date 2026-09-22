@@ -15,9 +15,19 @@
 推荐的 Agent 安装提示词：
 
 ```text
-请把 ask-vision 作为全局 Agent Skill 安装或更新到当前 Agent 的用户级 Skill 目录。Skill 来源为 https://github.com/Kangede/ask-vision；聚合索引仓库为 https://github.com/Kangede/agent-skills，并通过 Git submodule 引用该源仓库。请保留 SKILL.md、scripts、references 和 agents 目录；如果已安装同名 Skill，请更新现有安装，不要生成重复或多层嵌套目录。
+请把 ask-vision 作为全局 Agent Skill 安装或更新到当前 Agent 的用户级 Skill 目录。Skill 来源为 https://github.com/Kangede/ask-vision。请保留 SKILL.md、scripts、references 和 agents 目录；如果已安装同名 Skill，请更新现有安装，不要生成重复或多层嵌套目录。
 
-安装后，从当前会话正在使用的模型提供方配置中读取 OpenAI-compatible base_url，以及该 provider 的 env_key 所指向的 API Key；不要在回复、命令输出或仓库文件中显示完整密钥，也不要让我把密钥粘贴到聊天中。将 ask-vision 配置为 provider=openai、model=qwen-3.8，并把配置保存到 ask-vision 的用户级私有配置文件（权限限制为仅当前用户可读写）。最后查询 /v1/models，确认 qwen-3.8 可用，并执行一次不泄露密钥的最小验证；如果当前 Agent 无法读取会话提供方配置，请只告诉我需要设置哪些环境变量。
+安装后，复用当前会话正在使用的模型服务地址和认证凭据，不要假设当前客户端采用哪一种 API 协议或固定配置字段：
+
+- Codex 或其他使用 provider 配置的 Agent，通常可从当前 provider 的服务地址字段以及其凭据环境变量配置中获取。
+- Claude Code 或其他 Anthropic-compatible 客户端，通常可从 ANTHROPIC_BASE_URL 与 ANTHROPIC_AUTH_TOKEN、ANTHROPIC_API_KEY 或当前配置的凭据辅助程序中获取。
+- 其他 Agent 应读取其当前活动模型提供方的等价连接配置。
+
+不要修改当前客户端原有的模型连接配置，也不要在回复、命令参数、日志或仓库文件中显示完整凭据，更不要让我把凭据粘贴到聊天中。
+
+ask-vision 自身配置使用 provider=openai、model=qwen-3.8，并复用上述会话服务地址和凭据调用 OpenAI-compatible 接口；当前客户端即使使用 Anthropic-compatible 协议，也不影响 ask-vision 使用同一服务地址。将配置保存到 ask-vision 的用户级私有配置文件，并限制为仅当前用户可读写。
+
+最后查询 /v1/models，确认 qwen-3.8 可用，并执行一次不泄露凭据的最小验证。如果当前 Agent 无法读取活动会话的连接信息，请只说明需要设置 ASK_VISION_BASE_URL 和 ASK_VISION_API_KEY，不要要求用户在聊天中提供具体值。
 ```
 
 ### qwen-image-local
@@ -32,9 +42,19 @@
 推荐的 Agent 安装提示词：
 
 ```text
-请把 qwen-image-local 作为全局 Agent Skill 安装或更新到当前 Agent 的用户级 Skill 目录。Skill 来源为 https://github.com/Kangede/qwen-image-local；聚合索引仓库为 https://github.com/Kangede/agent-skills，并通过 Git submodule 引用该源仓库。请完整保留 SKILL.md、scripts、references、config、assets 和 agents 目录；如果已安装同名 Skill，请更新现有安装，不要创建重复目录。
+请把 qwen-image-local 作为全局 Agent Skill 安装或更新到当前 Agent 的用户级 Skill 目录。Skill 来源为 https://github.com/Kangede/qwen-image-local。请完整保留 SKILL.md、scripts、references、config、assets 和 agents 目录；如果已安装同名 Skill，请更新现有安装，不要创建重复目录。
 
-该 Skill 只应在当前 Agent 模型不是 GPT 系列时启用；如果当前是 GPT 系列 Codex 会话，应继续使用内置 imagegen，不要让两个 Skill 竞争。安装后，从当前会话的模型提供方配置读取 OpenAI-compatible base_url，以及 env_key 所指向的 API Key；不要输出、复制到命令参数、写入仓库或让我在聊天中粘贴完整密钥。默认生图模型别名使用 Qwen-Image-2.1。运行 scripts/qwen_image.py check，通过 /v1/models 确认模型可用；不要替换成其它接口地址。如果当前 Agent 无法读取会话配置，请只告诉我需要设置 QWEN_IMAGE_BASE_URL 和 QWEN_IMAGE_API_KEY。
+该 Skill 只应在当前 Agent 模型不是 GPT 系列时启用；如果当前是 GPT 系列 Codex 会话，应继续使用内置 imagegen，不要让两个 Skill 竞争。
+
+安装后，复用当前会话正在使用的模型服务地址和认证凭据，不要假设当前客户端采用哪一种 API 协议或固定配置字段：
+
+- Codex 或其他使用 provider 配置的 Agent，通常可从当前 provider 的服务地址字段以及其凭据环境变量配置中获取。
+- Claude Code 或其他 Anthropic-compatible 客户端，通常可从 ANTHROPIC_BASE_URL 与 ANTHROPIC_AUTH_TOKEN、ANTHROPIC_API_KEY 或当前配置的凭据辅助程序中获取。
+- 其他 Agent 应读取其当前活动模型提供方的等价连接配置。
+
+不要修改当前客户端原有的模型连接配置，也不要在回复、命令参数、日志或仓库文件中显示完整凭据，更不要让我把凭据粘贴到聊天中。qwen-image-local 会复用同一服务地址访问 Images API，并自行规范化所需路径；当前客户端使用 OpenAI-compatible 还是 Anthropic-compatible 协议，不影响该地址的复用。
+
+默认生图模型别名使用 Qwen-Image-2.1。安装完成后运行 scripts/qwen_image.py check，通过 /v1/models 确认该模型可用，不要替换为其他服务地址。如果当前 Agent 无法读取活动会话的连接信息，请只说明需要设置 QWEN_IMAGE_BASE_URL 和 QWEN_IMAGE_API_KEY，不要要求用户在聊天中提供具体值。
 ```
 
 ## 手动安装
