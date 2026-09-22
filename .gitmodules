@@ -1,6 +1,8 @@
 [submodule "skills/ask-vision"]
 	path = skills/ask-vision
 	url = https://github.com/Kangede/ask-vision.git
+	branch = main
 [submodule "skills/qwen-image-local"]
 	path = skills/qwen-image-local
 	url = https://github.com/Kangede/qwen-image-local.git
+	branch = main

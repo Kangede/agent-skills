@@ -1,0 +1,50 @@
+name: Update skill submodules
+
+on:
+  schedule:
+    - cron: "17 * * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: update-submodules
+  cancel-in-progress: false
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: Check out aggregator
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          submodules: recursive
+
+      - name: Configure Git author
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+      - name: Update submodules to latest main
+        run: git submodule update --remote --recursive --jobs 4
+
+      - name: Check for submodule updates
+        id: changes
+        run: |
+          if git diff --quiet -- .gitmodules skills; then
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "changed=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Commit and push updates
+        if: steps.changes.outputs.changed == 'true'
+        run: |
+          git add .gitmodules skills
+          git diff --cached --submodule=log > /tmp/submodule-updates.txt
+          git commit -m "Update skill submodules" -m "$(cat /tmp/submodule-updates.txt)"
+          git push

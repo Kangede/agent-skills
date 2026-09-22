@@ -32,7 +32,7 @@ ask-vision 自身配置使用 provider=openai、model=qwen-3.8，并复用上述
 
 ### qwen-image-local
 
-通过当前会话配置的 OpenAI-compatible Images API 使用 Qwen-Image-2.1 生成或编辑图片，支持透明 PNG、多个有序参考图和项目内文件输出。它只用于当前 Agent 模型不是 GPT 系列的场景；GPT 系列会话应使用 Codex 内置 `imagegen`。
+通过当前会话配置的 OpenAI-compatible Images API 使用 Qwen-Image-2.1 生成或编辑图片，支持透明 PNG、多个有序参考图和项目内文件输出。编辑时会使用不同于参考图来源的新 seed，以降低整图噪点或模糊风险；只有用户明确要求时才复用 seed。它只用于当前 Agent 模型不是 GPT 系列的场景；GPT 系列会话应使用 Codex 内置 `imagegen`。
 
 - 来源 submodule：[skills/qwen-image-local](skills/qwen-image-local)
 - 独立源仓库：[Kangede/qwen-image-local](https://github.com/Kangede/qwen-image-local)
